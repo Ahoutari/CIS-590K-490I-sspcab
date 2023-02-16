@@ -16,7 +16,7 @@
 
 -   `app/` contains the code for the paper
 
-    -   [`app/download_datasets.py`]('app/download_datasets.py') contains the code for downloading the datasets used in the paper `python download_datasets.py --url <dataset_url ending with .tar.xz>`
-    -   [`app/sspcab`]('app/sspcab/__init__.py') contains the code for the sspcab layer from the paper
+    -   [`app/download_datasets.py`](app/download_datasets.py) contains the code for downloading the datasets used in the paper `python download_datasets.py --url <dataset_url ending with .tar.xz>`
+    -   [`app/sspcab`](app/sspcab/__init__.py) contains the code for the sspcab layer from the paper
 
 -   `mvtec_ad_evaluation/` contains the code for the evaluation of the paper on the MVTec AD dataset
