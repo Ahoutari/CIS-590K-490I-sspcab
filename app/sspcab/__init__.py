@@ -21,14 +21,15 @@ def sspcab_layer(input, name, kernel_dim, dilation, filters, reduction_ratio=8):
         
         sspcab_input = tf.pad(input, tf.constant([[0, 0], [pad, pad], [pad, pad], [0, 0]]), "REFLECT")
         
-        sspcab_1 = tf.keras.layers.Conv2D(inputs=sspcab_input[:, :-border_input, :-border_input, :],
-                                    filters=filters, kernel_size=kernel_dim, activation=tf.nn.relu)
-        sspcab_3 = tf.keras.layers.Conv2D(inputs=sspcab_input[:, border_input:, :-border_input, :],
-                                    filters=filters, kernel_size=kernel_dim, activation=tf.nn.relu)
-        sspcab_7 = tf.keras.layers.Conv2D(inputs=sspcab_input[:, :-border_input, border_input:, :],
-                                    filters=filters, kernel_size=kernel_dim, activation=tf.nn.relu)
-        sspcab_9 = tf.keras.layers.Conv2D(inputs=sspcab_input[:, border_input:, border_input:, :],
-                                    filters=filters, kernel_size=kernel_dim, activation=tf.nn.relu)
+        sspcab_1 = tf.keras.layers.Conv2D(
+                                    filters=filters, kernel_size=kernel_dim, activation=tf.nn.relu)(sspcab_input[:, :-border_input, :-border_input, :])
+        sspcab_3 = tf.keras.layers.Conv2D(
+                                    filters=filters, kernel_size=kernel_dim, activation=tf.nn.relu)(sspcab_input[:, border_input:, :-border_input, :])
+        sspcab_7 = tf.keras.layers.Conv2D(
+                                    filters=filters, kernel_size=kernel_dim, activation=tf.nn.relu)(sspcab_input[:, :-border_input, border_input:, :])
+        sspcab_9 = tf.keras.layers.Conv2D(
+                                    filters=filters, kernel_size=kernel_dim, activation=tf.nn.relu)(sspcab_input[:, border_input:, border_input:, :])
+        
         sspcab_out = sspcab_1 + sspcab_3 + sspcab_7 + sspcab_9
 
         se_out = se_layer(sspcab_out, filters, reduction_ratio, 'SSPCAB/se_' + name)
@@ -45,9 +46,9 @@ def se_layer(input_x, in_channels, ratio, layer_name):
     '''
     with tf.name_scope(layer_name):
         squeeze = tf.reduce_mean(input_x, axis=[1, 2])
-        excitation = tf.keras.layers.Dense(squeeze, use_bias=True, units=in_channels / ratio)
+        excitation = tf.keras.layers.Dense(use_bias=True, units=in_channels / ratio)(squeeze)
         excitation = tf.nn.relu(excitation)
-        excitation = tf.keras.layers.Dense(excitation, use_bias=True, units=in_channels)
+        excitation = tf.keras.layers.Dense(use_bias=True, units=in_channels)(excitation)
         excitation = tf.nn.sigmoid(excitation)
 
         excitation = tf.reshape(excitation, [-1, 1, 1, in_channels])
