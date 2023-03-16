@@ -60,8 +60,8 @@ def se_layer(input_x, in_channels, ratio, layer_name):
 # loss = 0.1 * tf.reduce_mean(cost_sspcab)
 
 class SSPCAB(tf.keras.layers.Layer):
-    def __init__(self, kernel_dim, dilation, filters, reduction_ratio=8, name=None):
-        super(SSPCAB, self).__init__(name=name)
+    def __init__(self, kernel_dim, dilation, filters, reduction_ratio=8, name=None, **kwargs):
+        super(SSPCAB, self).__init__(name=name, **kwargs)
         
         self.kernel_dim = kernel_dim
         self.dilation = dilation
@@ -98,7 +98,7 @@ class SSPCAB(tf.keras.layers.Layer):
         
         
     def call(self, inputs, *args, **kwargs):
-        sspcab_input = tf.pad(input, tf.constant([[0, 0], [self.pad, self.pad], [self.pad, self.pad], [0, 0]]), "REFLECT")
+        sspcab_input = tf.pad(inputs, tf.constant([[0, 0], [self.pad, self.pad], [self.pad, self.pad], [0, 0]]), "REFLECT")
         
         out_1 = self.sspcab_1(sspcab_input[:, :-self.border_input, :-self.border_input, :])
         out_3 = self.sspcab_3(sspcab_input[:, self.border_input:, :-self.border_input, :])
@@ -109,9 +109,9 @@ class SSPCAB(tf.keras.layers.Layer):
 
         se_out = self.se_block(sspcab_out, self.filters, self.reduction_ratio)
         
-        cost_sspcab = tf.square(sspcab_input - se_out)
+        cost_sspcab = tf.square(inputs - se_out)
         loss = 0.1 * tf.reduce_mean(cost_sspcab)
-        
+                
         self.add_loss(loss)
 
         return se_out
