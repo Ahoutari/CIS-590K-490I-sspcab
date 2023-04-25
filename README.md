@@ -19,4 +19,25 @@
     -   [`app/download_datasets.py`](app/download_datasets.py) contains the code for downloading the datasets used in the paper `python download_datasets.py --url <dataset_url ending with .tar.xz>`
     -   [`app/sspcab`](app/sspcab/__init__.py) contains the code for the sspcab layer from the paper
 
--   `mvtec_ad_evaluation/` contains the code for the evaluation of the paper on the MVTec AD dataset
+### Training
+
+-   `app/train_mvtec.py` contains the code for training the model on the MVTec AD dataset
+
+-   Example usage:
+
+    ```bash
+    python train_mvtec.py --model simple_model \
+                    --dataset <path to dataset folder> \
+                    --epochs 20 \
+                    --batch_size 32 \
+                    --out <path to save files> \
+                    --num_workers 4
+    ```
+
+-   Output:
+
+    -   `model.h5` contains the trained model
+    -   `feature_extractor.h5` contains the trained feature extractor
+    -   `kde.pickle` contains the trained KDE model
+    -   `history.json` contains the training history
+    -   `metrics.json` contains the metrics used for anomaly detection
