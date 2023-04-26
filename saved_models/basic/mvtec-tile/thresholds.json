@@ -1,0 +1,4 @@
+{
+	"density_threshold": 11300,
+	"reconstruction_error_threshold": 0.02
+}
